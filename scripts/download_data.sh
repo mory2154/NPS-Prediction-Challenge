@@ -29,7 +29,7 @@ if ! command -v kaggle >/dev/null 2>&1; then
     echo "Install with: pip install kaggle"
     echo ""
     echo "Or download manually from:"
-    echo "  https://www.kaggle.com/datasets/blastchar/telco-customer-churn"
+    echo "  https://www.kaggle.com/datasets/ylchang/telco-customer-churn-1113"
     echo "and place the file in $DATA_DIR/"
     exit 1
 fi
