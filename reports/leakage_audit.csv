@@ -1,0 +1,55 @@
+feature,type,pearson_r,spearman_r,score,n_categories,eta_squared,in_drop_list,verdict
+Customer ID,categorical,,,1.0,7043.0,1.0,False,STRONG LEAK
+Churn Value,numeric,-0.755,-0.717,0.755,,,True,CONFIGURED
+Customer Status,categorical,,,0.571,3.0,0.571,True,CONFIGURED
+Churn Label,categorical,,,0.569,2.0,0.569,True,CONFIGURED
+Churn Score,numeric,-0.498,-0.482,0.498,,,True,CONFIGURED
+Churn Reason,categorical,,,0.431,20.0,0.431,True,CONFIGURED
+Churn Category,categorical,,,0.426,5.0,0.426,True,CONFIGURED
+Lat Long,categorical,,,0.238,1652.0,0.238,False,CLEAN
+Monthly Charges,numeric,-0.224,-0.21,0.224,,,False,CLEAN
+Tenure Months,numeric,0.21,0.203,0.21,,,False,CLEAN
+Number of Referrals,numeric,0.189,0.13,0.189,,,False,CLEAN
+City,categorical,,,0.17,1129.0,0.17,False,CLEAN
+Number of Dependents,numeric,0.153,0.158,0.153,,,False,CLEAN
+Total Long Distance Charges,numeric,0.137,0.145,0.137,,,False,CLEAN
+Total Revenue,numeric,0.095,0.111,0.095,,,False,CLEAN
+Avg Monthly GB Download,numeric,-0.092,-0.154,0.092,,,False,CLEAN
+Tech Support,categorical,,,0.092,3.0,0.092,False,CLEAN
+Internet Service,categorical,,,0.089,3.0,0.089,False,CLEAN
+Age,numeric,-0.085,-0.077,0.085,,,False,CLEAN
+Online Backup,categorical,,,0.083,3.0,0.083,False,CLEAN
+Device Protection,categorical,,,0.082,3.0,0.082,False,CLEAN
+Contract,categorical,,,0.082,3.0,0.082,False,CLEAN
+CLTV,numeric,0.076,0.067,0.076,,,True,CONFIGURED
+Streaming Movies,categorical,,,0.071,3.0,0.071,False,CLEAN
+Streaming TV,categorical,,,0.071,3.0,0.071,False,CLEAN
+Total Charges,numeric,0.07,0.078,0.07,,,False,CLEAN
+Online Security,categorical,,,0.07,3.0,0.07,False,CLEAN
+Payment Method,categorical,,,0.049,4.0,0.049,False,CLEAN
+Unlimited Data,categorical,,,0.044,2.0,0.044,False,CLEAN
+Internet Type,categorical,,,0.03,3.0,0.03,False,CLEAN
+Dependents,categorical,,,0.028,2.0,0.028,False,CLEAN
+Offer,categorical,,,0.024,5.0,0.024,False,CLEAN
+Total Refunds,numeric,0.024,0.027,0.024,,,False,CLEAN
+Paperless Billing,categorical,,,0.024,2.0,0.024,False,CLEAN
+Senior Citizen,categorical,,,0.014,2.0,0.014,False,CLEAN
+Zip Code,numeric,-0.011,-0.01,0.011,,,False,CLEAN
+Total Extra Data Charges,numeric,-0.01,-0.028,0.01,,,False,CLEAN
+ID,numeric,-0.01,-0.01,0.01,,,False,CLEAN
+Referred a Friend,categorical,,,0.006,2.0,0.006,False,CLEAN
+Married,categorical,,,0.006,2.0,0.006,False,CLEAN
+Partner,categorical,,,0.006,2.0,0.006,False,CLEAN
+Streaming Music,categorical,,,0.005,2.0,0.005,False,CLEAN
+Latitude,numeric,-0.005,-0.006,0.005,,,False,CLEAN
+Multiple Lines,categorical,,,0.004,3.0,0.004,False,CLEAN
+Population,numeric,0.004,0.003,0.004,,,False,CLEAN
+Longitude,numeric,0.004,0.003,0.004,,,False,CLEAN
+Under 30,categorical,,,0.002,2.0,0.002,False,CLEAN
+Avg Monthly Long Distance Charges,numeric,0.001,-0.001,0.001,,,False,CLEAN
+Phone Service,categorical,,,0.0,2.0,0.0,False,CLEAN
+Gender,categorical,,,0.0,2.0,0.0,False,CLEAN
+Quarter,categorical,,,0.0,1.0,0.0,False,CLEAN
+State,categorical,,,0.0,1.0,0.0,False,CLEAN
+Country,categorical,,,0.0,1.0,0.0,False,CLEAN
+Count,numeric,,,0.0,,,False,CLEAN

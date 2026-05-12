@@ -1,11 +1,5 @@
 """
 Project-wide configuration.
-
-Single source of truth for paths, random seeds, target definition,
-and the explicit list of leaky features to drop before modelling.
-
-Import as:
-    from src.config import RANDOM_SEED, DATA_PROCESSED, LEAKY_FEATURES
 """
 
 from pathlib import Path
@@ -22,13 +16,16 @@ DATA_PROCESSED = DATA_DIR / "processed"
 DATA_EXTERNAL = DATA_DIR / "external"
 
 MODELS_DIR = PROJECT_ROOT / "models"
+BASELINES_DIR = MODELS_DIR / "baselines"
+TUNED_DIR = MODELS_DIR / "tuned"
+RESULTS_DIR = MODELS_DIR / "results"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 FIGURES_DIR = REPORTS_DIR / "figures"
 
-# Make sure all directories exist on import — first-run safety
 for _dir in [
     DATA_RAW, DATA_INTERIM, DATA_PROCESSED, DATA_EXTERNAL,
-    MODELS_DIR, REPORTS_DIR, FIGURES_DIR,
+    MODELS_DIR, BASELINES_DIR, TUNED_DIR, RESULTS_DIR,
+    REPORTS_DIR, FIGURES_DIR,
 ]:
     _dir.mkdir(parents=True, exist_ok=True)
 
@@ -44,85 +41,54 @@ NPS_CLASSES = ["Detractor", "Passive", "Promoter"]
 NPS_CLASS_TO_INT = {"Detractor": 0, "Passive": 1, "Promoter": 2}
 NPS_INT_TO_CLASS = {v: k for k, v in NPS_CLASS_TO_INT.items()}
 
-# Baseline mapping from Satisfaction Score (1-5) to NPS class.
-# This is the starting point; alternative mappings tested in src/data/target.py.
-SATISFACTION_TO_NPS_BASELINE = {
-    1: "Detractor",
-    2: "Detractor",
-    3: "Detractor",
-    4: "Passive",
-    5: "Promoter",
+NPS_MAPPINGS: dict[str, dict[int, str]] = {
+    "baseline": {1: "Detractor", 2: "Detractor", 3: "Detractor",
+                 4: "Passive", 5: "Promoter"},
+    "alternative": {1: "Detractor", 2: "Detractor",
+                    3: "Passive", 4: "Passive", 5: "Promoter"},
 }
+SATISFACTION_TO_NPS_BASELINE = NPS_MAPPINGS["baseline"]
+
+# Phase 6 result: NPS_alternative wins (QWK 0.293 vs 0.212).
+# This is now the primary target for tuning.
+DEFAULT_TARGET = "NPS_alternative"
 
 # ============================================================
-# Leakage — features to ALWAYS drop before modelling
+# Leakage
 # ============================================================
-# Reasoning for each:
-#   Satisfaction Score → source of the label, trivial leak (f(x)=y)
-#   Churn Score        → IBM-computed propensity, leaks via correlation
-#   Churn Value        → outcome variable, calculated post-hoc
-#   Churn Label        → human-readable Churn Value
-#   Churn Reason       → only filled for churners → presence/absence leaks
-#   Churn Category     → same logic as Churn Reason
-#   CLTV               → debated, often computed with future data → drop by default
-
 LEAKY_FEATURES = [
-    "Satisfaction Score",
-    "Churn Score",
-    "Churn Value",
-    "Churn Label",
-    "Churn Reason",
-    "Churn Category",
-    "CLTV",
+    "Satisfaction Score", "Churn Score", "Churn Value", "Churn Label",
+    "Churn Reason", "Churn Category", "Customer Status", "CLTV",
 ]
-
-# ============================================================
-# Identifiers and constants — drop from features but keep in dataset
-# ============================================================
-ID_FEATURES = [
-    "CustomerID",
-    "Customer ID",
-    "Count",       # always 1
-    "Country",     # always "United States"
-    "State",       # always "California"
-    "Quarter",     # always "Q3"
-    "Lat Long",    # redundant with Latitude / Longitude
-]
-
-# ============================================================
-# Demographic features — kept for fairness audit, used cautiously in modelling
-# ============================================================
+ID_AND_CONSTANT_FEATURES = ["Count", "Country", "State", "Quarter", "Lat Long", "ID"]
+INDEX_COLUMN = "Customer ID"
 DEMOGRAPHIC_FEATURES = [
-    "Gender",
-    "Senior Citizen",
-    "Partner",
-    "Dependents",
-    "Age",                # if present in v11.1.3+
-    "Under 30",           # if present
-    "Number of Dependents",
+    "Gender", "Senior Citizen", "Partner", "Married",
+    "Dependents", "Number of Dependents", "Age", "Under 30",
 ]
 
 # ============================================================
-# Default hyperparameters — overridden by tuning later
+# Modelling
 # ============================================================
 LIGHTGBM_DEFAULT_PARAMS = {
-    "objective": "multiclass",
-    "num_class": 3,
-    "metric": "multi_logloss",
-    "learning_rate": 0.05,
-    "num_leaves": 31,
-    "min_data_in_leaf": 20,
-    "feature_fraction": 0.9,
-    "bagging_fraction": 0.9,
-    "bagging_freq": 5,
-    "random_state": RANDOM_SEED,
-    "n_jobs": -1,
-    "verbose": -1,
+    "objective": "multiclass", "num_class": 3, "metric": "multi_logloss",
+    "learning_rate": 0.05, "num_leaves": 31, "min_data_in_leaf": 20,
+    "feature_fraction": 0.9, "bagging_fraction": 0.9, "bagging_freq": 5,
+    "random_state": RANDOM_SEED, "n_jobs": -1, "verbose": -1,
 }
 
-# ============================================================
+PRIMARY_METRIC = "qwk"
+
+# Phase 7 — Optuna tuning budgets per model
+TUNING_BUDGETS = {
+    "lightgbm": 50,
+    "logistic": 30,
+    "ordinal":  20,
+}
+TUNING_SAMPLER = "tpe"  # 'tpe' or 'random'
+TUNING_TIMEOUT_SEC = 600  # safety net per study
+
 # Validation strategy
-# ============================================================
 TEST_SIZE = 0.2
-VAL_SIZE = 0.2  # of the remaining train pool
+VAL_SIZE = 0.2
 N_SPLITS_CV = 5

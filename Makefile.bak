@@ -1,35 +1,49 @@
 # ============================================================
-# NPS Prediction Challenge — Makefile (Phase 12 patch applied)
+# NPS Prediction Challenge — Makefile
 # ============================================================
 
 .PHONY: help install install-uv data check-leaks build-dataset build-splits \
         build-features prepare-prompts load-verbatims inspect-verbatims \
-        compute-embeddings \
-        baseline baseline-quick tune tune-hybrid final-eval interpret fairness \
-        batch-score \
-        train evaluate app verbatims \
-        test test-phase2 test-phase3 test-phase4 test-phase5 test-phase6 \
-        test-phase7 test-phase8 test-phase9 test-phase10 test-phase11 test-phase12 \
+        baseline baseline-quick tune train evaluate app verbatims \
+        test test-phase2 test-phase3 test-phase4 test-phase5 test-phase6 test-phase7 \
         lint format clean
 
 help:
 	@echo "NPS Prediction — available commands:"
 	@echo ""
+	@echo "  Setup"
+	@echo "    install        Create venv and install dependencies"
+	@echo ""
+	@echo "  Data pipeline"
+	@echo "    data             Load raw data (Phase 1)"
+	@echo "    check-leaks      Audit features for leakage (Phase 1)"
+	@echo "    build-dataset    Build modelling-ready dataset (Phase 2)"
+	@echo "    build-splits     Build train/val/test splits (Phase 3)"
+	@echo "    build-features   Apply derived features + fit pipeline (Phase 4)"
+	@echo ""
+	@echo "  Verbatims (Phase 5)"
+	@echo "    prepare-prompts  Build prompts file → upload to Colab"
+	@echo "    load-verbatims   Integrate Colab output"
+	@echo "    inspect-verbatims  Quality audit"
+	@echo ""
 	@echo "  Modeling"
-	@echo "    baseline       Phase 6"
-	@echo "    tune           Phase 7"
-	@echo "    tune-hybrid    Phase 8"
-	@echo "    final-eval     Phase 9"
-	@echo "    interpret      Phase 10"
-	@echo "    fairness       Phase 11"
-	@echo "    batch-score    Phase 12 (pre-compute predictions for the Streamlit app)"
+	@echo "    baseline         Train all baselines (Phase 6, ~3-5 min)"
+	@echo "    baseline-quick   Skip ordinal (faster)"
+	@echo "    tune             Tune the 3 models with Optuna (Phase 7, ~5-10 min)"
+	@echo "    train            Train final models (alias for tune)"
+	@echo "    evaluate         Evaluate on test sets"
 	@echo ""
 	@echo "  App"
-	@echo "    app            Launch the Streamlit UI"
+	@echo "    app              Launch Streamlit UI"
 	@echo ""
-	@echo "  Tests"
-	@echo "    test           Full pytest suite"
-	@echo "    test-phaseN    Phase N only (N=2..12)"
+	@echo "  Quality"
+	@echo "    test           Run full pytest suite"
+	@echo "    test-phaseN    Phase N only (N = 2..7)"
+	@echo "    lint           Lint with ruff"
+	@echo "    format         Auto-format"
+	@echo ""
+	@echo "  Cleanup"
+	@echo "    clean          Remove derived data, models, caches"
 
 install:
 	python3 -m venv .venv
@@ -39,6 +53,7 @@ install:
 install-uv:
 	uv venv && uv pip install -r requirements.txt
 
+# Data
 data:
 	python -m src.data.load
 check-leaks:
@@ -50,41 +65,31 @@ build-splits:
 build-features:
 	python -m src.features.build
 
+# Verbatims
 prepare-prompts:
 	python -m src.verbatims.prepare_prompts
 load-verbatims:
 	python -m src.verbatims.load_verbatims
 inspect-verbatims:
 	python -m src.verbatims.inspect
-compute-embeddings:
-	python -m src.features.embeddings
 
+# Modeling
 baseline:
 	python -m src.models.baseline
 baseline-quick:
 	python -m src.models.baseline --quick
 tune:
 	python -m src.models.tuning
-tune-hybrid:
-	python -m src.models.tuning_hybrid
-final-eval:
-	python -m src.evaluation.final_eval
-interpret:
-	python -m src.interpretation.shap_utils
-	python -m src.interpretation.linear_coef
-	python -m src.interpretation.pca_loadings
-fairness:
-	python -m src.fairness.audit
-batch-score:
-	python -m src.inference.batch_score
 train: tune
 evaluate:
 	python -m src.models.predict
 	python -m src.evaluation.metrics
 
+# App
 app:
 	streamlit run app/main.py
 
+# Tests
 test:
 	pytest tests/ -v
 test-phase2:
@@ -99,16 +104,6 @@ test-phase6:
 	pytest tests/test_phase6.py -v
 test-phase7:
 	pytest tests/test_phase7.py -v
-test-phase8:
-	pytest tests/test_phase8.py -v
-test-phase9:
-	pytest tests/test_phase9.py -v
-test-phase10:
-	pytest tests/test_phase10.py -v
-test-phase11:
-	pytest tests/test_phase11.py -v
-test-phase12:
-	pytest tests/test_phase12.py -v
 lint:
 	ruff check src/ tests/ app/
 format:
@@ -116,9 +111,8 @@ format:
 
 clean:
 	rm -rf data/interim/* data/processed/*
-	rm -rf models/*.joblib models/baselines/*.joblib models/tuned/*.joblib
-	rm -rf models/hybrid/*.joblib models/results/*.parquet
-	rm -rf reports/figures/* reports/final_eval_report.md reports/fairness_audit.md
+	rm -rf models/*.joblib models/baselines/*.joblib models/tuned/*.joblib models/results/*.parquet
+	rm -rf reports/figures/*
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	find . -type d -name .pytest_cache -exec rm -rf {} + 2>/dev/null || true
 	@echo "Cleaned."
