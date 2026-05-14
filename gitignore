@@ -1,0 +1,103 @@
+# =============================================================================
+# .gitignore — NPS Prediction Challenge
+# =============================================================================
+# Configuration : on INCLUT les données brutes IBM Telco (data/raw/) et les
+# verbatims synthétiques générés via Qwen (data/external/) pour permettre la
+# reproduction complète sans téléchargement externe.
+# On EXCLUT les fichiers intermédiaires/regénérables (data/interim, processed,
+# modèles) qui peuvent être reconstruits via le Makefile.
+# =============================================================================
+
+# =============================================================================
+# Données — règles différenciées
+# =============================================================================
+
+# data/raw/ : on INCLUT les Excel IBM Telco originaux (nécessaires à la repro)
+# Pas d'exclusion ici → tout est commité.
+
+# data/external/ : on INCLUT les verbatims synthétiques (générés sur Colab,
+# coûteux à régénérer ~30 min GPU)
+# Pas d'exclusion ici → tout est commité.
+
+# data/interim/ : exclu (regénérable via `make data`)
+data/interim/*
+!data/interim/.gitkeep
+
+# data/processed/ : exclu (regénérable via `make build-dataset build-splits`)
+data/processed/*
+!data/processed/.gitkeep
+
+# Embeddings parquet : exclu (regénérable via `make compute-embeddings`,
+# coûteux mais le hash content-addressed le régénère uniquement si verbatims changent)
+data/external/verbatim_embeddings.parquet
+
+# =============================================================================
+# Modèles — exclus (regénérables via les commandes make)
+# =============================================================================
+
+models/*.joblib
+models/baselines/*.joblib
+models/tuned/*.joblib
+models/hybrid/*.joblib
+models/results/*.parquet
+!models/.gitkeep
+!models/baselines/.gitkeep
+!models/tuned/.gitkeep
+!models/hybrid/.gitkeep
+!models/results/.gitkeep
+
+# =============================================================================
+# Caches & environnement — exclus systématiquement
+# =============================================================================
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Variables d'environnement (peuvent contenir des secrets / clés API)
+.env
+.env.local
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# =============================================================================
+# Système d'exploitation
+# =============================================================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =============================================================================
+# IDE / éditeurs
+# =============================================================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# Rapports — INCLUS (figures PNG visibles dans les rapports markdown)
+# =============================================================================
+# reports/figures/*.png  → commités, ne pas exclure
+
+# =============================================================================
+# Outputs temporaires
+# =============================================================================
+
+*.log
+*.tmp
+*.bak
