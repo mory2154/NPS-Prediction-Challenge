@@ -4,7 +4,6 @@
 data/raw/*
 data/interim/*
 data/processed/*
-data/external/*
 !data/**/.gitkeep
 
 # ============================================================
