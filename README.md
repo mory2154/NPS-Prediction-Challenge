@@ -116,9 +116,6 @@ nps-prediction/
 │   └── 13_monitoring.ipynb     # Phase 13
 ├── tests/                 # ~210 pytest invariants, organized by phase
 ├── reports/
-│   ├── rapport_final.pdf            # 6-page write-up (FR)
-│   ├── rapport_NPS_phases_0_7.docx  # detailed report, phases 0-7
-│   ├── rapport_NPS_phases_8_14.docx # detailed report, phases 8-14
 │   ├── phase13_monitoring_spec.md   # production spec
 │   ├── final_eval_report.md         # Phase 9 markdown report
 │   ├── fairness_audit.md            # Phase 11 markdown report
