@@ -323,21 +323,6 @@ but not required.
 
 ---
 
-## Documentation index
-
-| Document | Audience | Length |
-|---|---|---|
-| [`reports/rapport_final.pdf`](reports/rapport_final.pdf) | Artefact reviewers, hiring committee | 6 pages (FR) |
-| [`reports/rapport_NPS_phases_0_7.docx`](reports/rapport_NPS_phases_0_7.docx) | Technical reviewer, future self | ~30 pages (FR) |
-| [`reports/rapport_NPS_phases_8_14.docx`](reports/rapport_NPS_phases_8_14.docx) | Technical reviewer, future self | ~23 pages (FR) |
-| [`reports/final_eval_report.md`](reports/final_eval_report.md) | Phase 9 deep-dive | inline markdown |
-| [`reports/fairness_audit.md`](reports/fairness_audit.md) | Compliance | inline markdown |
-| [`reports/phase13_monitoring_spec.md`](reports/phase13_monitoring_spec.md) | Ops, infra | inline markdown |
-| `notebooks/0X_*.ipynb` | Reproducibility | 13 notebooks |
-
-The 6-page PDF is the right starting point for evaluators. The detailed Word reports are for whoever wants to understand *why* each choice was made.
-
----
 
 ## Acknowledgments
 
